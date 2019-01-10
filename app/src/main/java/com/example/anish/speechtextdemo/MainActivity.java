@@ -1,11 +1,15 @@
 package com.example.anish.speechtextdemo;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,12 +19,19 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     TextView resultText;
+    WebView ourBrow;
+    ArrayList<String> result;
 
+    @SuppressLint("JavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         resultText = (TextView)findViewById(R.id.textView);
+        ourBrow = (WebView)findViewById(R.id.webView1);
+        ourBrow.getSettings().setJavaScriptEnabled(true);
+        ourBrow.loadUrl("file:///android_asset/anish.html");
+        ourBrow.addJavascriptInterface(new WebAppInterface(this), "Android");
     }
 
     public void onButtonClick(View v){
@@ -46,10 +57,25 @@ public class MainActivity extends AppCompatActivity {
         switch(request_code){
             case 100:
                 if(result_code==RESULT_OK && i!=null){
-                    ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     resultText.setText(result.get(0));
                 }
                 break;
+        }
+    }
+
+    public class WebAppInterface {
+        Context mContext;
+
+        /** Instantiate the interface and set the context */
+        WebAppInterface(Context c) {
+            mContext = c;
+        }
+
+        /** Show a toast from the web page */
+        @JavascriptInterface
+        public String showToast() {
+            return result.get(0);
         }
     }
 }
