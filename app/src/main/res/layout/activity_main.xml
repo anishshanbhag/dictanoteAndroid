@@ -15,8 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_btn_speak_now"
-        tools:ignore="OnClick,RtlCompat"
-        android:onClick="onButtonClick"/>
+        tools:ignore="OnClick,RtlCompat" />
 
     <TextView
         android:id="@+id/textView"
